@@ -4,8 +4,9 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite --host",
+    "preview": "vite preview",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "push": "git remote add origin https://github.com/whaijungit/store.git && git push -u origin dev"
   },
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
