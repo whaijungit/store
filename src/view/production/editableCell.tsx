@@ -73,7 +73,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
           style={{ margin: 0 }}
           rules={[
             {
-              required,
+              required: dataIndex === 'poster' ? false : required,
               message: `请输入必填项 ${title}!`,
             },
           ]}

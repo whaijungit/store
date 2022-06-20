@@ -103,7 +103,7 @@ const App: React.FC<ProductionListProps> = (props) => {
       ediable: true,
       dataIndex: 'poster',
       render(url) {
-        return <Image placeholder="预览" width={80} height={80} src={url} />;
+        return <Image placeholder="预览" width={50} height={50} src={url} />;
       },
     },
     {

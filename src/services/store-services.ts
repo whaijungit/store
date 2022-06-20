@@ -1,4 +1,4 @@
-import { OperationResult, OperationType } from '@/views/common'
+import { OperationResult, OperationType } from '@/view/common'
 
 class StoreServices {
   static async set<T>(key: LOCA_KEY, recrod: T): Promise<SetListResult<T>> {

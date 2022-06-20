@@ -1,6 +1,5 @@
 import React from 'react';
-import { Image } from 'antd'
-import Production from './views/production';
+import Production from './view/production';
 
 class App extends React.Component {
   public state: Readonly<{
@@ -24,12 +23,12 @@ class App extends React.Component {
     return (
       <div
         style={{
-          display: 'flex',
-          flexDirection: 'column',
           padding: 10,
-          maxWidth: 100 + 'vw',
-          overflowX: 'hidden',
+          display: 'flex',
           overflowY: 'auto',
+          overflowX: 'hidden',
+          maxWidth: 100 + 'vw',
+          flexDirection: 'column',
         }}
       >
         <Production title={this.state.title} />
