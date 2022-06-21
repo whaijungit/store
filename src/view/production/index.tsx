@@ -91,14 +91,14 @@ const App: React.FC<ProductionListProps> = (props) => {
     }, 500);
   };
   const handleVildataError = () => {
-    message.warning('数据验证失败');
+    message.warning('请输入必填项');
   };
   const columns: CustmizerColumnType<Production>[] = [
     {
       title: '图片',
       align: 'center',
       type: 'file',
-      width: 150,
+      width: 100,
       required: true,
       ediable: true,
       dataIndex: 'poster',
@@ -221,7 +221,7 @@ const App: React.FC<ProductionListProps> = (props) => {
         loading={loading}
         dataSource={data}
         columns={mergedColumns}
-        scroll={{ x: 400, y: 600 }}
+        scroll={{ x: 375, y: 600 }}
         pagination={{ pageSize: 5, position: ['bottomCenter'] }}
         components={{
           body: {

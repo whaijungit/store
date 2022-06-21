@@ -58,7 +58,7 @@ class StoreServices {
       total: arrList.length
     }
   }
-  static async updateStore(key: 'pop_store' | 'push_store', recrod: PopProduction | PushProduction) {
+  static async updateStore(key: 'pop_store' | 'push_store', recrod:  PushProduction | PopProduction) {
     const storeList = await this.get<Store>('store')
     const newState = storeList.map(item => {
       if (item.series === recrod.production.series) {
@@ -73,8 +73,8 @@ class StoreServices {
     })
     localStorage.setItem('store', JSON.stringify(newState))
   }
-  static async filter(key: 'pop_store' | 'push_store', condition: ConditionTimer): Promise<FindResult<(PushProduction | PopProduction)[]>> {
-    const results: (PushProduction | PopProduction)[] = []
+  static async filter(key: 'pop_store' | 'push_store', condition: ConditionTimer): Promise<FindResult<(PushProduction | Production)[]>> {
+    const results: (PushProduction | Production)[] = []
     switch (key) {
       case 'push_store':
         const pushList = await this.get<PushProduction>('push_store')

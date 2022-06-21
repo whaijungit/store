@@ -1,6 +1,6 @@
 import base64 from '@/services/base64';
 import React, { useState } from 'react';
-import { EditOutlined } from '@ant-design/icons';
+import { EditOutlined, PlusOutlined } from '@ant-design/icons';
 import { UploadFile } from 'antd/lib/upload/interface';
 import { Button, Form, Input, Upload, Image } from 'antd';
 
@@ -70,7 +70,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
       {editing ? (
         <Form.Item
           name={dataIndex}
-          style={{ margin: 0 }}
+          // style={{ margin: 0 }}
           rules={[
             {
               required: dataIndex === 'poster' ? false : required,

@@ -11,11 +11,11 @@ interface FormProductionProps {
    */
   onValidateError?: () => void;
   /**
-   * 表单信息完成提交
+   * 提交表单信息时触发该事件
    */
   onSumit?: (data: Production) => Promise<boolean>;
   /**
-   * 表单信息提交失败
+   * 提交表单信息失败时触发该事件
    */
   onSubmitCatch?: () => void;
   /**
@@ -23,6 +23,8 @@ interface FormProductionProps {
    */
   formFields: CustmizerColumnType<Production>[];
 }
+
+const layouts = { labelCol: { span: 6 }, wrapperCol: { span: 16 } };
 
 const FormProduction: React.FC<FormProductionProps> = ({
   onSumit,
@@ -41,27 +43,31 @@ const FormProduction: React.FC<FormProductionProps> = ({
       values.id = generateUUID();
       if (onSumit) {
         const success = await onSumit(values);
-        form.resetFields();
+
         if (!success) {
           if (onSubmitCatch) {
             onSubmitCatch();
+            return;
           }
+        } else {
+          form.resetFields();
         }
+        setLoading(false);
       }
     } catch (err) {
       onValidateError && onValidateError();
-    } finally {
       setLoading(false);
     }
   };
   return (
-    <Form form={form} className="form_container">
-      <Row gutter={5}>
+    <Form form={form} {...layouts} className="form_container">
+      <Row gutter={[8, 0]}>
         {formFields.map((production, index) => {
           let element: React.ReactNode = <Input></Input>;
           if (production.type === 'file') {
             element = (
               <Input
+                className="ant-input"
                 accept=".jpg,.png,.gif"
                 type="file"
                 value={source}

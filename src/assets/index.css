@@ -61,6 +61,9 @@ input[type='file']::-webkit-file-upload-button {
   border: none;
   z-index: 2;
   cursor: pointer;
+  text-overflow: ellipsis;
+  word-wrap: normal;
+  overflow: hidden;
 }
 
 .ant-form input[type='file']:hover {

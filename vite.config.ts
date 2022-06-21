@@ -1,6 +1,6 @@
 import * as path from 'path'
-import { build, defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -16,8 +16,8 @@ export default defineConfig({
     minify: 'terser',
     outDir: 'dist',
     assetsDir: 'assets',
+    chunkSizeWarningLimit: 1024 * 1024,
   },
-  
   esbuild: {
     jsxFragment: 'Fragment'
   }

@@ -104,33 +104,6 @@ declare interface Production {
   textureMaterial: string
 }
 
-/**
- * 入货记录 一条记录
- */
-declare interface PushProduction {
-  id?: string
-  /**
-   * 入货时间
-   */
-  timer: Timer
-  /**
-   * 入货数量
-   */
-  number: number
-  /**
-   * 入货到达时间
-   */
-  dist: string
-  /**
-   * 入货产品
-   */
-  production: Production
-  /**
-   * 入货备注
-   */
-  description: string
-}
-
 /** @description 出货的一条记录 */
 declare interface PopProduction {
   id: string
@@ -164,9 +137,36 @@ declare interface PopProduction {
 }
 
 /**
+ * 入货记录 一条记录
+ */
+declare interface PushProduction {
+  id?: string
+  /**
+   * 入货时间
+   */
+  timer: Timer
+  /**
+   * 入货数量
+   */
+  number: number
+  /**
+   * 入货到达时间
+   */
+  dist: string
+  /**
+   * 入货产品
+   */
+  production: Production
+  /**
+   * 入货备注
+   */
+  description: string
+}
+
+/**
  * localStoreage 中存储的三种 总库记录 出库记录 入库记录
  */
-declare type StoreProduction = PopProduction | PushProduction | Production
+declare type StoreProduction = Production | PushProduction | PopProduction
 
 /** 型号查找 */
 declare interface SeriesCondition {

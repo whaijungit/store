@@ -31,7 +31,7 @@ class App extends React.Component {
           flexDirection: 'column',
         }}
       >
-        <Production title={this.state.title} />
+        <Production title={this.state.title}></Production>
       </div>
     );
   }
