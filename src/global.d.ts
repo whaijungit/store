@@ -133,7 +133,7 @@ declare interface PopProduction {
   /** 电话号 */
   phone: string
   /** 产品 */
-  production: Production
+  production: Production | Production[]
 }
 
 /**

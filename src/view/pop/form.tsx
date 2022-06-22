@@ -3,7 +3,7 @@ import base64 from '@/services/base64';
 import { useForm } from 'antd/lib/form/Form';
 import { generateUUID } from '@/services/utils';
 import { CustmizerColumnType } from '../common';
-import { Button, Col, Form, Input, Row, Space } from 'antd';
+import { Button, Col, DatePicker, Form, Input, Row, Select, Space } from 'antd';
 
 interface FormProductionProps {
   /**
@@ -17,11 +17,11 @@ interface FormProductionProps {
   /**
    * 提交表单信息时触发该事件
    */
-  onSumit?: (data: Production) => Promise<boolean>;
+  onSumit?: (data: PopProduction) => Promise<boolean>;
   /**
    * 表单字段
    */
-  formFields: CustmizerColumnType<Production>[];
+  formFields: CustmizerColumnType<PopProduction>[];
 }
 
 const layouts = { labelCol: { span: 6 }, wrapperCol: { span: 16 } };
@@ -32,14 +32,20 @@ const FormProduction: React.FC<FormProductionProps> = ({
   onSubmitCatch,
   onValidateError,
 }) => {
-  const [form] = useForm<Production>();
+  const [form] = useForm<PopProduction>();
   const [source, setSource] = React.useState<string>('');
   const [loading, setLoading] = React.useState<boolean>(false);
   const handleClick = async () => {
     setLoading(true);
     try {
       const values = await form.validateFields();
-      values.poster = source;
+      if (Array.isArray(values.production)) {
+        for (const production of values.production) {
+          production.poster = source;
+        }
+      } else {
+        values.production.poster = source;
+      }
       values.id = generateUUID();
       if (onSumit) {
         const success = await onSumit(values);
@@ -83,12 +89,28 @@ const FormProduction: React.FC<FormProductionProps> = ({
             element = 'text';
           } else if (production.type === 'number') {
             element = 'number';
+          } else if (production.type === 'timer') {
+            if (production.dataIndex === 'timer') {
+              element = (
+                <DatePicker.RangePicker
+                  placeholder={['起始时间', '结束时间']}
+                ></DatePicker.RangePicker>
+              );
+            } else {
+              element = <DatePicker placeholder="请输入签收日期"></DatePicker>;
+            }
           }
           if (production.title === '操作') {
             return null;
+          } else if (production.title === '批量') {
+            return null;
           }
-          else if (production.title === '批量') {
-            return null
+          if (production.title === '产品') {
+            element = <Select options={[{label: '图片',value:production.dataIndex}]}>
+              <Select.Option>
+
+              </Select.Option>
+            </Select>;
           }
           return (
             <Col key={index} span={12}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import Production from './view/production';
+import SwtichPage from './view/switchPage';
 
 class App extends React.Component {
   public state: Readonly<{
@@ -20,20 +20,7 @@ class App extends React.Component {
   };
 
   render() {
-    return (
-      <div
-        style={{
-          padding: 10,
-          display: 'flex',
-          overflowY: 'auto',
-          overflowX: 'hidden',
-          maxWidth: 100 + 'vw',
-          flexDirection: 'column',
-        }}
-      >
-        <Production title={this.state.title}></Production>
-      </div>
-    );
+    return <SwtichPage></SwtichPage>;
   }
 }
 

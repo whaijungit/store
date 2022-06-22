@@ -5,15 +5,15 @@ import { ColumnType } from 'antd/lib/table';
  * 方便添加元数据进行操作
  */
 export interface CustmizerColumnType<T> extends ColumnType<T> {
-  type?: 'file' | 'number' | 'timer' | 'text'
-  required?: boolean
   ediable?: boolean
+  required?: boolean
+  type?: 'file' | 'number' | 'timer' | 'text'
 }
 
 export enum OperationType {
-  delete = '删除',
-  edit = '修改',
   add = '新增',
+  edit = '修改',
+  delete = '删除',
 }
 
 /** 操作返回值 */

@@ -1,51 +1,69 @@
 import React from 'react';
 import FormProduction from './form';
-import {
-  Tag,
-  Form,
-  Image,
-  Space,
-  Table,
-  message,
-  Typography,
-  Popconfirm,
-} from 'antd';
+import Store from '@/services/store';
 import base64 from '@/services/base64';
 import EditableCell from './editableCell';
 import { useForm } from 'antd/lib/form/Form';
 import StoreServices from '@/services/store-services';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { CustmizerColumnType, resetLabel } from '../common';
+import {
+  Tag,
+  Form,
+  Image,
+  Space,
+  Table,
+  Input,
+  message,
+  Typography,
+  Popconfirm,
+  Button,
+} from 'antd';
+import { RowSelectMethod, TableRowSelection } from 'antd/lib/table/interface';
+
+
+const { Text } = Typography
 
 interface ProductionListProps {
   title: LOCA_KEY;
+  onOperation:(type: LOCA_KEY,prodction: Production|Production[])=>void
 }
 
 const App: React.FC<ProductionListProps> = (props) => {
   const [form] = useForm<Production>();
+  const [keyWorld, setKeyWorld] = React.useState('');
   const [data, setData] = React.useState<Production[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [editingKey, setEditingKey] = React.useState<string>('');
+  const [chooseProductions, setChooseProductions] = React.useState<
+    Production[]
+    >([]);
+  React.useEffect(() => {
+    const fetch = async () => {
+      fetchData(await getDatas());
+    };
+    fetch();
+  }, []);
+  const getDatas = async () => {
+    return await StoreServices.get<Production>(props.title);
+  };
   const isEditing = (prodction: Production) => prodction.id === editingKey;
-  const fetchData = async () => {
-    const datas = await StoreServices.get<Production>(props.title);
-    setData(datas);
+  // 重新设置data
+  const fetchData = async (datas: Production[]) => {
     setTimeout(() => {
+      setData(datas);
       setLoading(false);
-    }, 700);
+    }, 300);
   };
 
-  React.useEffect(() => {
-    fetchData();
-  }, []);
   const handleSubmitCatch = () => {
     message.error('数据录入失败');
   };
   const handleSubmitSuccess = async (data: Production): Promise<boolean> => {
-    return await StoreServices.set<Production>('production', data).then(
-      ({ status, data, total }) => {
+    return await Store.set<Production>('production', data).then(
+      ({ status, data }) => {
         if (status) {
-          message.success(<Tag>{'添加成功,已经存储' + total + '条'}</Tag>);
+          message.success(<Tag>{'添加成功,已经存储' + data.length + '条'}</Tag>);
           setData(data);
         }
         return status;
@@ -62,7 +80,7 @@ const App: React.FC<ProductionListProps> = (props) => {
         const { status } = await StoreServices.edit('production', key, values);
         if (status) {
           message.success('修改成功');
-          fetchData();
+          fetchData(await getDatas());
         }
       }
     } catch (err) {
@@ -79,20 +97,69 @@ const App: React.FC<ProductionListProps> = (props) => {
   const cancel = () => {
     setEditingKey('');
   };
-  const handleDelete = async (data: Production) => {
-    setLoading(true);
-    const result = await StoreServices.delete('production', data);
-    if (result) {
-      message.success('删除成功');
-      setData(await StoreServices.get<Production>('production'));
+  // 删除全部商品
+  const handleDeleteAll = async () => {
+    if (chooseProductions.length) {
+       setLoading(true)
+      const result = await Store.delete<Production>('id', props.title, chooseProductions)
+      await fetchData(result.data)
+      const number = (result.item as any).length
+      message.success(`已删除所选${number}个产品`)
+      setChooseProductions([])
+      return
     }
-    setTimeout(() => {
-      setLoading(false);
-    }, 500);
+    message.warn('请选择产品')
+   
   };
+
+  const handleDeleteOne = async (prodction: Production) => {
+    setLoading(true);
+    const result = await Store.delete('id', props.title, prodction);
+    console.log(result);
+    if (result.status) {
+      message.success('删除了 1 条数据');
+      fetchData(await getDatas());
+      return;
+    }
+    message.error('删除失败');
+    setLoading(false);
+  };
+  // form 验证出现问题
   const handleVildataError = () => {
     message.warning('请输入必填项');
   };
+  const handleSelection = (chooseRows:Production[],type: RowSelectMethod) => {
+    if (type === 'all') {
+      setChooseProductions(chooseRows)
+    } else if (type === 'single') {
+      setChooseProductions(chooseRows)
+    }
+  }
+  
+  const handleSearch = async (value: string) => {
+    setLoading(true);
+    const newState: Set<Production> = new Set<Production>;
+    const list = await Store.get<Production>(props.title);
+    for (const production of list) {
+      for (const key in production) {
+        if (production[key] == value) {
+          newState.add(production);
+        }
+      }
+    }
+    setTimeout(() => {
+      setData([...newState]);
+      setLoading(false);
+      setKeyWorld('');
+    }, 500);
+  };
+
+  const selection: TableRowSelection<Production> = {
+    onChange(r,rows,{type}) {
+      handleSelection(rows, type)
+      setChooseProductions(rows)
+    },
+  }
   const columns: CustmizerColumnType<Production>[] = [
     {
       title: '图片',
@@ -103,7 +170,9 @@ const App: React.FC<ProductionListProps> = (props) => {
       ediable: true,
       dataIndex: 'poster',
       render(url) {
-        return <Image placeholder="预览" width={50} height={50} src={url} />;
+        return (
+          <Image placeholder="点击预览" width={50} height={50} src={url} />
+        );
       },
     },
     {
@@ -149,7 +218,7 @@ const App: React.FC<ProductionListProps> = (props) => {
       title: '操作',
       align: 'center',
       fixed: 'right',
-      width: 120,
+      width: 110,
       dataIndex: 'id',
       render(_, recrod) {
         const editable = isEditing(recrod);
@@ -178,9 +247,9 @@ const App: React.FC<ProductionListProps> = (props) => {
                 style={{ width: 100 }}
                 placement="top"
                 title={'确定要删除嘛?'}
-                onConfirm={() => handleDelete(recrod)}
+                onConfirm={async () => handleDeleteOne(recrod)}
                 okText="确定"
-                cancelText="取消"
+                  cancelText="取消"
               >
                 删除
               </Popconfirm>
@@ -209,32 +278,85 @@ const App: React.FC<ProductionListProps> = (props) => {
   return (
     <Form form={form} component={false}>
       <FormProduction
+        formFields={columns}
+        onSumit={handleSubmitSuccess}
         onSubmitCatch={handleSubmitCatch}
         onValidateError={handleVildataError}
-        onSumit={handleSubmitSuccess}
-        formFields={columns}
       ></FormProduction>
       <Table
         bordered
         rowKey={'id'}
-        className="editable-row"
         loading={loading}
         dataSource={data}
         columns={mergedColumns}
+        className="editable-row"
+        rowSelection={selection}
         scroll={{ x: 375, y: 600 }}
-        pagination={{ pageSize: 5, position: ['bottomCenter'] }}
         components={{
           body: {
             cell: EditableCell,
           },
         }}
         title={() => (
-          <Tag
-            icon={<CheckCircleOutlined />}
-            color={'blue'}
-            children={resetLabel(props.title)}
-          />
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Tag
+                style={{ flex: '0 0 10px', height: 22 }}
+                icon={<CheckCircleOutlined />}
+                color={'blue'}
+                children={resetLabel(props.title)}
+              />
+              <Space className="contorls" style={{ flex: '1 1 1' }}>
+                <Button
+                  size="small"
+                  onClick={() => {
+                    props.onOperation&&props.onOperation('pop_store',chooseProductions)
+                  }}
+                >
+                  出货
+                </Button>
+                 <Button
+                  size="small"
+                  onClick={() => {
+                    props.onOperation&&props.onOperation('push_store',chooseProductions)
+                  }}
+                >
+                  入货
+                </Button>
+                <Popconfirm
+                style={{ width: 100 }}
+                placement="top"
+                title={'确定要删除嘛?'}
+                onConfirm={handleDeleteAll}
+                okText="确定"
+                cancelText="取消"
+              >
+                <Button
+                  size="small"
+                  children="删除"
+                />
+              </Popconfirm>
+              </Space>
+              <Input
+                
+                value={keyWorld}
+                placeholder="请输入查询关键字"
+                style={{ flex: '0 0 30%' }}
+                onChange={async (e) => {
+                  setKeyWorld(e.target.value);
+                }}
+                onPressEnter={(e) => {
+                  handleSearch((e.target as any).value);
+                }}
+              ></Input>
+            </div>
         )}
+        pagination={{ pageSize: 5, position: ['bottomCenter'] }}
       ></Table>
     </Form>
   );

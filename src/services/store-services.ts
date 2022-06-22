@@ -58,17 +58,34 @@ class StoreServices {
       total: arrList.length
     }
   }
-  static async updateStore(key: 'pop_store' | 'push_store', recrod:  PushProduction | PopProduction) {
+  static async updateStore(key: 'pop_store' | 'push_store', recrod: PushProduction | PopProduction) {
     const storeList = await this.get<Store>('store')
+    const findSeries = (series1: string, series2: string) => {
+
+    }
     const newState = storeList.map(item => {
-      if (item.series === recrod.production.series) {
-        if (key === 'pop_store') {
-          item.number -= recrod.number
-          item.number <= 0 ? item.number = 0 : void 0
-        } else {
-          item.number += recrod.number
+      if (Array.isArray(recrod.production)) {
+        for (const produciton of recrod.production) {
+          if (produciton.series === item.series) {
+            if (key === 'pop_store') {
+              item.number -= recrod.number
+              item.number <= 0 ? item.number = 0 : void 0
+            } else {
+              item.number += recrod.number
+            }
+          }
+        }
+      } else {
+        if (item.series === recrod.production.series) {
+          if (key === 'pop_store') {
+            item.number -= recrod.number
+            item.number <= 0 ? item.number = 0 : void 0
+          } else {
+            item.number += recrod.number
+          }
         }
       }
+
       return item
     })
     localStorage.setItem('store', JSON.stringify(newState))
@@ -101,6 +118,7 @@ class StoreServices {
   }
 
   static async edit(key: LOCA_KEY, id: string, production: StoreProduction): Promise<OperationResult<StoreProduction>> {
+    console.log(key, id, production)
     const result: OperationResult<StoreProduction> = {
       status: false,
       type: OperationType.edit,
