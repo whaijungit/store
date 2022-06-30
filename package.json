@@ -1,0 +1,39 @@
+{
+  "name": "store",
+  "productName": "store",
+  "private": true,
+  "version": "0.0.1",
+  "license": "MIT",
+  "main": "dist/electron/main/index.js",
+  "author": "boboco",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build && electron-builder"
+  },
+  "engines": {
+    "node": ">=14.17.0"
+  },
+  "dependencies": {
+    "electron-store": "^8.0.1"
+  },
+  "devDependencies": {
+    "@ant-design/icons": "^4.7.0",
+    "@types/react": "^18.0.12",
+    "@types/react-dom": "^18.0.5",
+    "@vitejs/plugin-react": "^1.3.2",
+    "antd": "4.21.4",
+    "electron": "^19.0.3",
+    "electron-builder": "^23.0.3",
+    "less": "^4.1.3",
+    "rc-upload": "^4.3.4",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "typescript": "^4.7.3",
+    "vite": "^2.9.10",
+    "vite-plugin-electron": "^0.6.0"
+  },
+  "env": {
+    "VITE_DEV_SERVER_HOST": "127.0.0.1",
+    "VITE_DEV_SERVER_PORT": 7777
+  }
+}
