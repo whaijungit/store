@@ -3,6 +3,12 @@ export enum IpcRequestEventName {
   SAVE_PRODUCTION = 'save-produciton',
   /** 删除一个商品 channle_id */
   DELETE_PRODUCTION = 'delete-production',
+  /** 保存一条出货记录 */
+  SAVE_POP_PROUDCITON = 'save-pop-production',
+  delete_POP_PROUDCITON = 'delete-pop-production',
+  /** 保存一条入库记录 */
+  SAVE_PUSS_STOR_PRODUCTION = 'save-push-store-production',
+  DETETE_PUSS_STOR_PRODUCTION = 'delete-push-store-production',
 }
 
 export enum IpcResponseEventName {
@@ -12,6 +18,4 @@ export enum IpcResponseEventName {
   DELETE_STATUS_PRODUCTION = 'delete-status-production',
 }
 
-export interface IPCChannle {
-  name: IpcRequestEventName | IpcResponseEventName 
-}
+export type IPCChannle = IpcRequestEventName | IpcResponseEventName

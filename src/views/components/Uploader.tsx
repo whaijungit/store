@@ -1,7 +1,7 @@
-import fs from 'fs'
+import os from 'os'
 import path from 'path'
+import { promises } from 'fs'
 import { useState } from 'react'
-import { ipcRenderer } from 'electron'
 import { RcFile } from 'antd/lib/upload'
 import { PlusOutlined } from '@ant-design/icons'
 import { Modal, Upload, UploadFile } from 'antd'
@@ -16,12 +16,10 @@ const Uploader: React.FC<ImageUploaderProps> = (props) => {
   const [visible, setVisible] = useState<boolean>(false)
   const handleRequest = async (options: UploadRequestOption) => {
     const file = options.file as RcFile
-    const extname = path.extname(file.path)
-    const buffer = await fs.promises.readFile(file.path)
-    ipcRenderer.send('upload-image', { filename: file.name, content: buffer, extname })
-    ipcRenderer.on('upload-success', (e, url) => {
-      props.onChange && props.onChange(url)
-    })
+    const buffer = await promises.readFile(file.path)
+    const filename = os.homedir() + '/store/images/' + Date.now() + path.extname(file.path)
+    await promises.writeFile(filename, buffer)
+    props.onChange && props.onChange(filename)
   }
   const getFileList = (): UploadFile[] => {
     if (props.value) {
@@ -53,15 +51,18 @@ const Uploader: React.FC<ImageUploaderProps> = (props) => {
       }} onCancel={() => {
         setVisible(false)
       }}>
-        <img style={{ width: '100%', objectFit: 'contain' }} src={props.value} />
+        <img style={{ width: '100%', objectFit: 'cover' }} src={props.value} />
       </Modal>
       <Upload
         fileList={getFileList()}
         listType='picture-card'
         customRequest={handleRequest}
         accept=".jpg,.png,.gif,.jpeg"
-        onRemove={() => {
+        onRemove={async () => {
           props.onChange && props.onChange('')
+          if (props.value) {
+            promises.unlink(props.value)
+          }
         }}
         onPreview={() => {
           setVisible(true)

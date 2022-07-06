@@ -1,6 +1,5 @@
 import { join } from 'path'
 import { release } from 'os'
-import { save, upload } from './ipc.handle'
 import { app, BrowserWindow, shell } from 'electron'
 
 // Disable GPU Acceleration for Windows 7
@@ -34,8 +33,7 @@ async function createWindow() {
       contextIsolation: false,
     },
   })
-  upload(win)
-  save(win)
+
   win.menuBarVisible = false
   if (app.isPackaged) {
     win.loadFile(join(__dirname, '../../index.html'))

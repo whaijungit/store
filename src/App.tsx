@@ -1,5 +1,5 @@
 import React from 'react'
-import Launch from './views/index/Launch'
+import Launch from './views/store'
 
 const App: React.FC = () => {
   return <Launch />

@@ -4,9 +4,9 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "start .debug.script.mjs",
+      "label": "start debug.mjs",
       "type": "shell",
-      "command": "node .vscode/.debug.script.mjs",
+      "command": "node .vscode/debug.mjs",
       "isBackground": true,
       "problemMatcher": []
     }
