@@ -2,9 +2,9 @@ import { useState } from 'react'
 import Uploader from './Uploader'
 import { useForm } from 'antd/lib/form/Form'
 import { generateUUID } from '@/common/helper'
-import { Button, Col, DatePicker, Form, Input, InputNumber, Row, Space } from 'antd'
+import { Button, Col, DatePicker, Form, Input, InputNumber, Row, Select, Space } from 'antd'
 
-export type InputType = 'file' | 'text' | 'date' | 'number'
+export type InputType = 'file' | 'text' | 'date' | 'number' | 'select'
 
 export interface StoreFormProps {
   formItem: Array<{
@@ -13,6 +13,7 @@ export interface StoreFormProps {
     name: string
     required: boolean
   }>
+  select?:React.ReactNode
   /** 当前表单提交成功的 */
   onSubmitSuccess?: () => void
   onValidateFailed?: () => void
@@ -49,6 +50,10 @@ const StoreForm: React.FC<StoreFormProps> = (props) => {
         return <Input placeholder={`请输入${item.label}`} />
       case 'number':
         return <InputNumber style={{ width: '100%' }} placeholder={`请输入${item.label}`} />
+      case 'select':
+        <Select.OptGroup >
+        </Select.OptGroup>
+        return
     }
   }
   const handleClick = async () => {

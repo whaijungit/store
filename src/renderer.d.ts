@@ -1,23 +1,3 @@
-declare var api: API
-
-type API = ElectronAPI & NativeAPI
-
-interface ElectronAPI {
-  ipcRenderer: () => import('electron').IpcRenderer
-  clipboard: () => import('electron').Clipboard
-}
-
-interface NativeAPI {
-  fs: typeof import('fs')
-  os: typeof import('os')
-  path: typeof import('path')
-}
-
-interface Window {
-  electronAPI: ElectronAPI
-  nodeAPI: NativeAPI
-}
-
 /** 产品一条记录 */
 declare interface Production {
   /**
@@ -86,25 +66,11 @@ declare interface PopProduction {
 declare interface PushProducitonStore {
   id?: string
   /**
-   * 入货时间
-   */
-  timer: Timer
-  /**
-   * 入货数量
+   * 入库数量
    */
   number: number
-  /**
-   * 入货到达时间
-   */
-  dist: string
-  /**
-   * 入货产品
-   */
-  production: Production
-  /**
-   * 入货备注
-   */
-  description: string
+
+  series: string
 }
 
 declare interface StoreResult {

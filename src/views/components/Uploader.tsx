@@ -6,6 +6,7 @@ import { RcFile } from 'antd/lib/upload'
 import { PlusOutlined } from '@ant-design/icons'
 import { Modal, Upload, UploadFile } from 'antd'
 import { UploadRequestOption } from 'rc-upload/lib/interface'
+import ProductionServices from '@/common/services'
 
 interface ImageUploaderProps {
   value?: string
@@ -16,9 +17,7 @@ const Uploader: React.FC<ImageUploaderProps> = (props) => {
   const [visible, setVisible] = useState<boolean>(false)
   const handleRequest = async (options: UploadRequestOption) => {
     const file = options.file as RcFile
-    const buffer = await promises.readFile(file.path)
-    const filename = os.homedir() + '/store/images/' + Date.now() + path.extname(file.path)
-    await promises.writeFile(filename, buffer)
+    const filename = await ProductionServices.writeImage(file.path)
     props.onChange && props.onChange(filename)
   }
   const getFileList = (): UploadFile[] => {
@@ -60,9 +59,9 @@ const Uploader: React.FC<ImageUploaderProps> = (props) => {
         accept=".jpg,.png,.gif,.jpeg"
         onRemove={async () => {
           props.onChange && props.onChange('')
-          if (props.value) {
-            promises.unlink(props.value)
-          }
+          // if (props.value) {
+          //   promises.unlink(props.value)
+          // }
         }}
         onPreview={() => {
           setVisible(true)

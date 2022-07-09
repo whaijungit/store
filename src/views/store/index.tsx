@@ -1,40 +1,42 @@
 import './index.less'
 import React from 'react'
 import Aside from './Aside'
+import PopList from './pop'
 import Header from './Header'
-import { message } from 'antd'
 import Content from './Content'
 import Production from './production'
+import { ipcRenderer } from 'electron'
+import avatar from '../../../public/avatar.png'
 import CollapseLayout from '@/views/components/Layouts'
 
 export type ReactKeys = 'production' | 'pop' | 'push' | "store1" | "store2" | 'store3' | 'store4' | "store5" | 'store6' | 'store7' | "store8" | "store_other"
 
 const Launch: React.FC = () => {
-  const [collapse, setCollapse] = React.useState(false);
-  const [component, setComponent] = React.useState<React.ReactNode>(<Production />)
+  const [collapse, setCollapse] = React.useState(true);
   const [key, setkey] = React.useState<ReactKeys[]>(['production'])
+  const [component, setComponent] = React.useState<React.ReactNode>(<Production setKeys={setkey}></Production>)
   const handleCollapse = () => {
     setCollapse(!collapse)
   }
   const handlePopProduction = (productions: Production[]) => {
     setkey(['pop'])
-    setComponent('pop')
+    setComponent(<PopList></PopList>)
   }
-  const handlePushProduction = (productions: Production[]) => {
+  const handlePushStore = (productions: Production[]) => {
     setkey(['push'])
-    setComponent('push')
+    setComponent('store')
   }
   const handlePageChange = (key: ReactKeys) => {
     setkey([key])
     switch (key) {
       case 'production':
-        setComponent(<Production onPushProduction={handlePushProduction} onPopProduction={handlePopProduction} />)
-        return
+        setComponent(<Production setKeys={setkey} onPushProduction={handlePushStore} onPopProduction={handlePopProduction} />)
+        break;
       case 'pop':
-        setComponent("pop")
+        setComponent(<PopList></PopList>)
         break
       case 'push':
-        setComponent("push")
+        setComponent(<>push</>)
         break
       case 'store1':
         setComponent("store1")
@@ -63,13 +65,15 @@ const Launch: React.FC = () => {
     }
   }
   const handleLoginOut = () => {
-    message.success('待开发....')
+    ipcRenderer.send('exit', 0)
   }
   return (
     <CollapseLayout
       collapse={collapse}
-      aside={<Aside value={key} switchPage={handlePageChange} />}
-      header={<Header onLoginOut={handleLoginOut} onCollapse={handleCollapse} />}
+      aside={<Aside value={key} switchPage={(key) => {
+        handlePageChange(key)
+      }} />}
+      header={<Header avatar={avatar} onLoginOut={handleLoginOut} onCollapse={handleCollapse} />}
     >
       <Content>
         {component}

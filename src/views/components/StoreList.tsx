@@ -5,13 +5,12 @@ import { ColumnType, TablePaginationConfig } from 'antd/lib/table'
 
 interface StoreListProps<T = any> {
   data?: T[]
-  cell?: any
   loading?: boolean
+  EditableCell?: any
   title?: () => React.ReactNode
   pagination?: TablePaginationConfig
   rowSelection?: TableRowSelection<T>
   onChange?: (page: number, pageSize: number) => void
-  EditableCell?: React.FC
   columns?: (ColumnType<T> | ColumnType<T> & { editable: boolean })[]
 }
 
