@@ -1,3 +1,6 @@
+type ReactKeys = Array<'production' | 'pop' | 'push' | "store1" | "store2" | 'store3' | 'store4' | "store5" | 'store6' | 'store7' | "store8" | "store_other">
+
+
 /** 产品一条记录 */
 declare interface Production {
   /**

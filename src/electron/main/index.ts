@@ -1,13 +1,6 @@
-import { join } from 'path'
-import { request } from 'https'
 import { release } from 'os'
-import { app, BrowserWindow, ipcMain, shell } from 'electron'
-
-request('https://www.kuaidi100.com/query?type=jd&postid=JDVC14368245107123&id=1&valicode=&temp=0.8435105474707654&phone=12', resp => {
-  resp.on('data', (chunk) => {
-    console.log(chunk)
-  })
-})
+import { join, resolve } from 'path'
+import { app, BrowserWindow, ipcMain, session, shell } from 'electron'
 
 // Disable GPU Acceleration for Windows 7
 if (release().startsWith('6.1')) app.disableHardwareAcceleration()
@@ -34,11 +27,12 @@ async function createWindow() {
     width: 1000,
     height: 800,
     center: true,
-    title: 'Store',
+    title: null,
     hasShadow: true,
     icon: '../../../public/vite.svg',
     webPreferences: {
       webSecurity: false,
+      webgl: true,
       preload: splash,
       nodeIntegration: true,
       contextIsolation: false,
@@ -86,6 +80,12 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
+if (process.env['node_env'] === 'development') {
+  app.on('session-created', () => {
+    session.defaultSession.loadExtension(resolve(__dirname,'../../../dev-tools/fmkadmapgofadopljbjfkapdkoienihi/4.25.0_0'))
+  })
+}
 
 ipcMain.on('exit', (e, code) => {
   app.exit(code)

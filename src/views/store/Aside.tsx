@@ -1,6 +1,5 @@
 import { Menu } from 'antd'
 import { ItemType } from 'antd/lib/menu/hooks/useItems'
-import { ReactKeys } from '.'
 
 const items: ItemType[] = [
   {
@@ -62,15 +61,16 @@ const items: ItemType[] = [
 const Aside: React.FC<{ value: string[], switchPage: (key: ReactKeys) => void }> = (props) => {
 
   return (
-    // @ts-ignore
-    <Menu selectedKeys={props.value} defaultSelectedKeys={props.value} items={items.map((item) => {
-      return {
-        ...item,
-        onClick(key) {
-          props.switchPage(key.key as ReactKeys)
-        }
-      }
-    })} />
+    <div style={{height: 100+'vh'}}>
+      <Menu
+        style={{ height: '100%' }}
+        selectedKeys={props.value}
+        defaultSelectedKeys={props.value}
+        // @ts-ignore
+        items={items.map((item: ItemType) => ({ ...item, onClick({ key }) { props.switchPage([key]) } }))}
+      />
+    </div>
+    
   )
 }
 

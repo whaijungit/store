@@ -1,4 +1,3 @@
-import { ReactKeys } from '..'
 import EditableCell from './EditableCell'
 import { useForm } from 'antd/lib/form/Form'
 import React, { SetStateAction } from 'react'
@@ -27,7 +26,7 @@ const formItem: Array<FormItem> = [
 ]
 
 interface ProductionListProps {
-  setKeys: React.Dispatch<SetStateAction<ReactKeys[]>>
+  setKeys: React.Dispatch<SetStateAction<ReactKeys>>
   onPopProduction?: (chooseProductions: Production[]) => void
   onPushProduction?: (chooseProductions: Production[]) => void
 }
@@ -100,7 +99,7 @@ const ProductionList: React.FC<ProductionListProps> = ({ setKeys, onPopProductio
       width: 100,
       editable: true,
       align: 'center',
-      render: (_) => <Image width={50} height={50} src={_} />
+      render: (_) => <Image height={50} src={_} />
     },
     {
       title: '名称',

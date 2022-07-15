@@ -39,7 +39,7 @@ const Uploader: React.FC<ImageUploaderProps> = (props) => {
     return (
       <>
         <PlusOutlined />
-        <div>点击上传</div>
+        <span>请选择图片</span>
       </>
     )
   }
@@ -50,7 +50,7 @@ const Uploader: React.FC<ImageUploaderProps> = (props) => {
       }} onCancel={() => {
         setVisible(false)
       }}>
-        <img style={{ width: '100%', objectFit: 'cover' }} src={props.value} />
+        <img style={{ width: 50,height: 50, objectFit: 'cover' }} src={props.value} />
       </Modal>
       <Upload
         fileList={getFileList()}

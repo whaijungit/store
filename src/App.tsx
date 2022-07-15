@@ -1,3 +1,5 @@
 import Launch from './views/store'
 
-export default () => <Launch></Launch>
+const App: React.FC = () => <Launch></Launch>
+
+export default App

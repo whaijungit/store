@@ -6,6 +6,7 @@ export function buildDefaultOptions(preload: string, contextIsolation: boolean):
     title: 'store',
     webPreferences: {
       preload,
+      webgl:true,
       contextIsolation,
       nodeIntegration: contextIsolation,
     },
